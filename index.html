@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>umang Chai Corner</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          board: '#16241f',
+          panel: '#1f3229',
+          chalk: '#f3e9d2',
+          mustard: '#e0a72e',
+          chili: '#c1443c',
+          line: '#3c5347'
+        },
+        fontFamily: {
+          display: ['"Baloo 2"', 'sans-serif'],
+          body: ['Inter', 'sans-serif']
+        }
+      }
+    }
+  }
+</script>
+</head>
+<body class="bg-board text-chalk font-body min-h-screen flex items-center justify-center px-4 py-10">
+
+<div class="w-full max-w-md bg-panel border-4 border-line rounded-2xl px-6 py-8 shadow-2xl shadow-black/40">
+
+  <div class="text-center mb-6">
+    <p class="text-mustard text-sm tracking-wide">near airport, varanasi</p>
+    <h1 class="font-display text-4xl font-800 text-chalk mt-1">umang chai corner</h1>
+    <p class="text-chalk/60 text-sm mt-1">ek chai banaras ke naam!</p>
+  </div>
+
+  <div class="bg-chili/20 border border-chili/50 rounded-lg px-4 py-3 mb-6 flex items-center justify-between">
+    <div>
+      <p class="text-xs text-chili font-medium">today's special</p>
+      <p class="font-display text-lg">Elaichi Kulhad Chai</p>
+    </div>
+    <span class="font-display text-xl text-mustard">₹15</span>
+  </div>
+
+  <div id="menu" class="space-y-1"></div>
+
+  <div class="border-t-2 border-dashed border-line mt-6 pt-4 flex items-center justify-between">
+    <div>
+      ""<p class="text-chalk/60 text-sm">Total (<span id="cupCount">0</span> cups)</p>
+      <p class="font-display text-2xl text-mustard">₹<span id="totalAmt">0</span></p>
+    </div>
+    <button onclick="resetOrder()" class="text-sm text-chalk/50 hover:text-chili transition-colors underline underline-offset-4">reset</button>
+  </div>
+
+</div>
+
+<script>
+  const items = [
+    { name: 'Adrak Chai', price: 12 },
+    { name: 'Masala Chai', price: 15 },
+    { name: 'Plain Doodh Chai', price: 10 },
+    { name: 'Black Chai (patti)', price: 8 },
+    { name: 'Kulhad Chai', price: 15 }
+  ];
+
+  const order = {};
+  const menuEl = document.getElementById('menu');
+
+  items.forEach((item, i) => {
+    order[i] = 0;
+    const row = document.createElement('div');
+    row.className = 'flex items-center justify-between py-2.5 border-b border-line/60 last:border-b-0';
+    row.innerHTML = `
+      <div>
+        <p class="font-medium">${item.name}</p>
+        <p class="text-chalk/50 text-sm">₹${item.price}</p>
+      </div>
+      <div class="flex items-center gap-3">
+        <button class="w-7 h-7 rounded-full bg-line text-chalk hover:bg-chili transition-colors" onclick="change(${i}, -1)">−</button>
+        <span id="qty-${i}" class="w-4 text-center">0</span>
+        <button class="w-7 h-7 rounded-full bg-mustard text-board font-bold hover:bg-chalk transition-colors" onclick="change(${i}, 1)">+</button>
+      </div>
+    `;
+    menuEl.appendChild(row);
+  });
+
+  function change(i, delta) {
+    order[i] = Math.max(0, order[i] + delta);
+    document.getElementById(`qty-${i}`).textContent = order[i];
+    updateTotal();
+  }
+
+  function updateTotal() {
+    let cups = 0, total = 0;
+    items.forEach((item, i) => {
+      cups += order[i];
+      total += order[i] * item.price;
+    });
+    document.getElementById('cupCount').textContent = cups;
+    document.getElementById('totalAmt').textContent = total;
+  }
+
+  function resetOrder() {
+    items.forEach((_, i) => {
+      order[i] = 0;
+      document.getElementById(`qty-${i}`).textContent = 0;
+    });
+    updateTotal();
+  }
+</script>
+
+</body>
+</html>
